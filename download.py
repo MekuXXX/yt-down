@@ -7,14 +7,11 @@ def list_available_qualities(yt):
         qualities.add(stream.resolution)
     return sorted(list(qualities))
 
-def display_available_qualities(yt):
+def display_quality_menu(yt):
     available_qualities = list_available_qualities(yt)
     print("Available qualities:")
     for i, quality in enumerate(available_qualities, 1):
         print(f"{i}. {quality}")
-    return available_qualities
-
-def display_quality_menu(available_qualities):
     choice = input("Enter the number of the desired quality: ").strip()
     try:
         choice = int(choice)
@@ -61,13 +58,11 @@ def app():
     
     if choice == '1':
         video_url = input("Enter the URL of the video: ").strip().split(" ")[0]
-        available_qualities = display_available_qualities(YouTube(video_url))
-        quality = display_quality_menu(available_qualities)
+        quality = display_quality_menu(YouTube(video_url))
         download_video(video_url, quality, download_path=download_path[0])
     elif choice == '2':
         videos_urls = input("Enter the URLs of the videos separated by spaces: ").strip().split()
-        available_qualities = display_available_qualities(YouTube(videos_urls[0]))
-        quality = display_quality_menu(available_qualities)
+        quality = display_quality_menu(YouTube(videos_urls[0]))
         for key,value in enumerate(videos_urls):
             path = path = download_path[0] if key >= len(download_path) else download_path[key]
             print(path)

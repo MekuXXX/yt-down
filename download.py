@@ -1,4 +1,5 @@
 from pytube import YouTube, Playlist
+from pytube.cli import on_progress
 
 def list_available_qualities(yt):
     streams = yt.streams.filter(progressive=True, file_extension='mp4')
@@ -23,9 +24,9 @@ def display_quality_menu(yt):
 
 def download_video(video_url, quality, download_path='./'):
     try:
-        yt = YouTube(video_url)
+        yt = YouTube(video_url, on_progress_callback=on_progress)
         stream = yt.streams.filter(res=quality, file_extension='mp4').first()
-        
+        video = yt.streams.first()
         print(f"Downloading video: {yt.title} in {stream.resolution}...")
         stream.download(output_path=download_path)
         print("Download complete!")
@@ -58,11 +59,11 @@ def app():
     
     if choice == '1':
         video_url = input("Enter the URL of the video: ").strip().split(" ")[0]
-        quality = display_quality_menu(YouTube(video_url))
+        quality = display_quality_menu(YouTube(video_url, on_progress_callback=on_progress))
         download_video(video_url, quality, download_path=download_path[0])
     elif choice == '2':
         videos_urls = input("Enter the URLs of the videos separated by spaces: ").strip().split()
-        quality = display_quality_menu(YouTube(videos_urls[0]))
+        quality = display_quality_menu(YouTube(videos_urls[0], on_progress_callback=on_progress))
         for key,value in enumerate(videos_urls):
             path = path = download_path[0] if key >= len(download_path) else download_path[key]
             print(path)
